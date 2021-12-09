@@ -5,12 +5,15 @@ namespace App\Controller;
 use App\Entity\Season;
 use App\Entity\Episode;
 use App\Entity\Program;
+use App\Entity\Category;
 use App\Form\ProgramType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @Route("/program", name="program_")
@@ -35,7 +38,7 @@ class ProgramController extends AbstractController
             ['programs' => $programs]
         );
     }
-/**
+    /**
      * The controller for the category add form
      *
      * @Route("/new", name="new")
@@ -49,7 +52,7 @@ class ProgramController extends AbstractController
         // Get data from HTTP request
         $form->handleRequest($request);
         // Was the form submitted ?
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()){
             // Deal with the submitted data
             // Get the Entity Manager
             $entityManager = $this->getDoctrine()->getManager();
@@ -122,4 +125,8 @@ class ProgramController extends AbstractController
             'episode' => $episode
         ]);
     }
+
+
+
+
 }
