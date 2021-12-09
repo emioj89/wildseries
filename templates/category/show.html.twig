@@ -1,32 +1,42 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Category #{{ categoryName }}{% endblock %}
+
+
 
 {% block body %}
-    <div class="media">
+<div class="media">
+    <div class="media-body">
+
+        {% for program in programs %}
+        <div class="categoryshow">
+            <h1 class="mt-0">{{program.id}}.{{ program.title }}</h1>
+            <img src="{{program.poster}}" alt="{{ program.title }} poster">
+            <p>{{ program.summary }}</p>
+            <p>Catégorie : {{ categoryName }}</p>
+            <a href="{{ path("program_show", { id: program.id }) }}">Voir toutes les saisons</a>
 
 
+            <div class="seasons">
+                <p> La liste des saisons :</p>
+                {% for season in program.seasons %}
+                <li>
+                    <a href="{{ path("program_show_season", { program_id: program.id, season_id:season.number}) }}">
+                        {{season.description}}
+                    </a>
+                </li>
+                {% endfor %}
+            </div>
 
-        <div class="media-body">
-            <h1 class="mt-0">{{categoryName }}</h1>
-            {% for programs in program %}
 
-
-
-            <p>{{programs.id}}</p>
-            <p class="mt-0">{{ programs.title }}</p>
-            <p>{{programs.summary}}</p>
-            <br>
-            <a href="{{ path("program_show", { id: programs.id }) }}">Voir la fiche</a>
-            <br>
-            {% else %}
-        Aucune série trouvée.
-
-            {% endfor %}
         </div>
-    </div>
 
-    <a href="{{ path('category_index') }}">
-        Retour à la liste des categories
+        {% endfor %}
+    </div>
+</div>
+
+<div class="boutonRetour">
+    <a href="{{ path('program_index') }}">
+        Retour à la liste des programmes
     </a>
+</div>
 {% endblock %}

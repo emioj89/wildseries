@@ -2,10 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\CategoryRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\Program;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\CategoryRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass=CategoryRepository::class)
@@ -28,11 +29,18 @@ class Category
      * @ORM\OneToMany(targetEntity=Program::class, mappedBy="category")
      */
     private $category;
+    /**
+     * @ORM\OneToMany(targetEntity=Program::class, mappedBy="category")
+     */
+    private $programs;
 
     public function __construct()
     {
         $this->category = new ArrayCollection();
+        $this->programs = new ArrayCollection();
     }
+
+
 
     public function getId(): ?int
     {
@@ -50,6 +58,15 @@ class Category
 
         return $this;
     }
+
+    /**
+     * @return Collection|Program[]
+     */
+    public function getPrograms(): Collection
+    {
+        return $this->programs;
+    }
+
 
     /**
      * @return Collection|Program[]
@@ -75,6 +92,34 @@ class Category
             // set the owning side to null (unless already changed)
             if ($category->getCategory() === $this) {
                 $category->setCategory(null);
+            }
+        }
+
+        return $this;
+    }
+    /**
+     * @param Program $program
+     * @return Category
+     */
+    public function addProgram(Program $program): self
+    {
+        if (!$this->programs->contains($program)) {
+            $this->programs[] = $program;
+            $program->setCategory($this);
+        }
+
+        return $this;
+    }
+    /**
+     * @param Program $program
+     * @return Category
+     */
+    public function removeProgram(Program $program): self
+    {
+        if ($this->programs->removeElement($program)) {
+            // set the owning side to null (unless already changed)
+            if ($program->getCategory() === $this) {
+                $program->setCategory(null);
             }
         }
 
